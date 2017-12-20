@@ -214,13 +214,13 @@ public class AnnotationModule extends CalcModule {
 
 		if (locationColumn != -1) {
 
-			if (m.getRowCount() > 1) {
+			if (m.getRows() > 1) {
 				if (!GenomicRegion.isGenomicRegion(m.getText(0, locationColumn)) && 
 						!GenomicRegion.isGenomicRegion(m.getText(1, locationColumn))) {
 					// If the column does not appear to contain coordinates
 					locationColumn = -1;
 				}
-			} else if (m.getRowCount() == 1) {
+			} else if (m.getRows() == 1) {
 				if (!GenomicRegion.isGenomicRegion(m.getText(0, locationColumn))) {
 					// If the column does not appear to contain coordinates
 					locationColumn = -1;
@@ -261,7 +261,7 @@ public class AnnotationModule extends CalcModule {
 		}
 
 		// How many new columns to add
-		int newColCount = m.getColumnCount();
+		int newColCount = m.getCols();
 
 		for (AnnotationPanel panel : dialog.getPanels()) {
 			if (!panel.getAddFeatures()) {
@@ -285,13 +285,13 @@ public class AnnotationModule extends CalcModule {
 			}
 		}
 
-		DataFrame ret = DataFrame.createDataFrame(m.getRowCount(), newColCount);
+		DataFrame ret = DataFrame.createDataFrame(m.getRows(), newColCount);
 
 		DataFrame.copy(m, ret);
 
 		// Add some annotation
 
-		int c = m.getColumnCount();
+		int c = m.getCols();
 
 		for (AnnotationPanel panel : dialog.getPanels()) {
 			if (!panel.getAddFeatures()) {
@@ -343,7 +343,7 @@ public class AnnotationModule extends CalcModule {
 		UCSCTrack track;
 		GapSearch<UCSCTrackRegion> gapSearch;
 
-		for (int r = 0; r < m.getRowCount(); ++r) {
+		for (int r = 0; r < m.getRows(); ++r) {
 			GenomicRegion region;
 
 			if (locationColumn != -1) {
@@ -367,7 +367,7 @@ public class AnnotationModule extends CalcModule {
 				continue;
 			}
 
-			c = m.getColumnCount();
+			c = m.getCols();
 
 			for (AnnotationPanel panel : dialog.getPanels()) {
 				if (!panel.getAddFeatures()) {
@@ -482,13 +482,13 @@ public class AnnotationModule extends CalcModule {
 
 		if (locationColumn != -1) {
 
-			if (m.getRowCount() > 1) {
+			if (m.getRows() > 1) {
 				if (!GenomicRegion.isGenomicRegion(m.getText(0, locationColumn)) && 
 						!GenomicRegion.isGenomicRegion(m.getText(1, locationColumn))) {
 					// If the column does not appear to contain coordinates
 					locationColumn = -1;
 				}
-			} else if (m.getRowCount() == 1) {
+			} else if (m.getRows() == 1) {
 				if (!GenomicRegion.isGenomicRegion(m.getText(0, locationColumn))) {
 					// If the column does not appear to contain coordinates
 					locationColumn = -1;
@@ -519,11 +519,11 @@ public class AnnotationModule extends CalcModule {
 		}
 
 		DataFrame ret = 
-				DataFrame.createDataFrame(m.getRowCount(), m.getColumnCount() + 1);
+				DataFrame.createDataFrame(m.getRows(), m.getCols() + 1);
 
 		DataFrame.copy(m, ret);
 		
-		ret.setColumnName(m.getColumnCount(), "segment.size.kb");
+		ret.setColumnName(m.getCols(), "segment.size.kb");
 
 		// Now for the annotation
 
@@ -531,7 +531,7 @@ public class AnnotationModule extends CalcModule {
 		int start;
 		int end;
 
-		for (int r = 0; r < m.getRowCount(); ++r) {
+		for (int r = 0; r < m.getRows(); ++r) {
 			GenomicRegion region;
 
 			if (locationColumn != -1) {
@@ -544,7 +544,7 @@ public class AnnotationModule extends CalcModule {
 
 				region = GenomicRegion.parse(t);
 			} else {
-				chr = Chromosome.parse(m.getText(r, chrCol));
+				chr = ChromosomeService.getInstance().parse(m.getText(r, chrCol));
 				start = (int)m.getValue(r, startCol);
 				end = (int)m.getValue(r, endCol);
 
@@ -555,7 +555,7 @@ public class AnnotationModule extends CalcModule {
 				continue;
 			}
 			
-			ret.set(r, m.getColumnCount(), Mathematics.round((double)region.getLength() / 1000, 2));
+			ret.set(r, m.getCols(), Mathematics.round((double)region.getLength() / 1000, 2));
 		}
 
 		mWindow.addToHistory("Segment size", ret);
