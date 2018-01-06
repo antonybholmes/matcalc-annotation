@@ -27,145 +27,138 @@ import org.jebtk.modern.tabs.TabsModel;
 import org.jebtk.modern.window.ModernWindow;
 import org.jebtk.modern.window.WindowWidgetFocusEvents;
 
-
 public class AnnotationDialog extends ModernDialogTaskWindow implements ModernClickListener {
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private Map<String, Path> mBedFileMap;
+  private Map<String, Path> mBedFileMap;
 
-	private Map<String, Map<String, String>> mDescriptionMap;
+  private Map<String, Map<String, String>> mDescriptionMap;
 
-	private List<AnnotationPanel> mPanels =
-			new ArrayList<AnnotationPanel>();
-	
-	private ModernCheckBox mCheckOverlapping = 
-			new ModernCheckBox("Overlapping", true);
+  private List<AnnotationPanel> mPanels = new ArrayList<AnnotationPanel>();
 
-	private ModernRadioButton mCheckClosest = 
-			new ModernRadioButton("Closest");
+  private ModernCheckBox mCheckOverlapping = new ModernCheckBox("Overlapping", true);
 
-	//private ModernCheckBox mCheckWithin = new ModernCheckBox("Within", true);
+  private ModernRadioButton mCheckClosest = new ModernRadioButton("Closest");
 
-	public AnnotationDialog(ModernWindow parent,
-			Map<String, Path> bedFileMap, 
-			Map<String, Map<String, String>> descriptionMap) {
-		super(parent);
+  // private ModernCheckBox mCheckWithin = new ModernCheckBox("Within", true);
 
-		mBedFileMap = bedFileMap;
-		mDescriptionMap = descriptionMap;
+  public AnnotationDialog(ModernWindow parent, Map<String, Path> bedFileMap,
+      Map<String, Map<String, String>> descriptionMap) {
+    super(parent);
 
-		setTitle("Annotation");
+    mBedFileMap = bedFileMap;
+    mDescriptionMap = descriptionMap;
 
-		createUi();
+    setTitle("Annotation");
 
-		setup();
-	}
+    createUi();
 
-	private void setup() {
-		//new ModernButtonGroup(mCheckOverlapping, mCheckClosest);
-		
-		addWindowListener(new WindowWidgetFocusEvents(mOkButton));
+    setup();
+  }
 
-		setResizable(true);
+  private void setup() {
+    // new ModernButtonGroup(mCheckOverlapping, mCheckClosest);
 
-		setSize(800, 600);
+    addWindowListener(new WindowWidgetFocusEvents(mOkButton));
 
-		UI.centerWindowToScreen(this);
-	}
+    setResizable(true);
 
-	private final void createUi() {
-		TabsModel genomeTabsModel = new TabsModel();
+    setSize(800, 600);
 
-		Set<String> genomeTabNames = new TreeSet<String>();
+    UI.centerWindowToScreen(this);
+  }
 
-		for (String name : mDescriptionMap.keySet()) {
-			String tabName = "Other";
+  private final void createUi() {
+    TabsModel genomeTabsModel = new TabsModel();
 
-			if (mDescriptionMap.get(name).containsKey("genome")) {
-				tabName = mDescriptionMap.get(name).get("genome");
-			}
+    Set<String> genomeTabNames = new TreeSet<String>();
 
-			genomeTabNames.add(tabName);
-		}
+    for (String name : mDescriptionMap.keySet()) {
+      String tabName = "Other";
 
-		for (String genome : CollectionUtils.sortCaseInsensitive(genomeTabNames)) {
-			TabsModel sourceTabsModel = new TabsModel();
-			Map<String, Box> sourceTabNames = new TreeMap<String, Box>();
+      if (mDescriptionMap.get(name).containsKey("genome")) {
+        tabName = mDescriptionMap.get(name).get("genome");
+      }
 
-			for (String name : mDescriptionMap.keySet()) {
-				String tabName = "Other";
+      genomeTabNames.add(tabName);
+    }
 
-				if (mDescriptionMap.get(name).containsKey("source")) {
-					tabName = mDescriptionMap.get(name).get("source");
-				}
+    for (String genome : CollectionUtils.sortCaseInsensitive(genomeTabNames)) {
+      TabsModel sourceTabsModel = new TabsModel();
+      Map<String, Box> sourceTabNames = new TreeMap<String, Box>();
 
-				sourceTabNames.put(tabName, new VBox());
-			}
+      for (String name : mDescriptionMap.keySet()) {
+        String tabName = "Other";
 
-			for (String name : mBedFileMap.keySet()) {
-				String tabName = "Other";
+        if (mDescriptionMap.get(name).containsKey("source")) {
+          tabName = mDescriptionMap.get(name).get("source");
+        }
 
-				if (mDescriptionMap.get(name).containsKey("source")) {
-					tabName = mDescriptionMap.get(name).get("source");
-				}
-				
-				String g = "Other";
+        sourceTabNames.put(tabName, new VBox());
+      }
 
-				if (mDescriptionMap.get(name).containsKey("genome")) {
-					g = mDescriptionMap.get(name).get("genome");
-				}
+      for (String name : mBedFileMap.keySet()) {
+        String tabName = "Other";
 
-				if (g.equals(genome)) {
-					AnnotationPanel panel = new AnnotationPanel(mDescriptionMap.get(name));
+        if (mDescriptionMap.get(name).containsKey("source")) {
+          tabName = mDescriptionMap.get(name).get("source");
+        }
 
-					mPanels.add(panel);
+        String g = "Other";
 
-					sourceTabNames.get(tabName).add(panel);
-					sourceTabNames.get(tabName).add(UI.createVGap(20));
-				}
-			}
+        if (mDescriptionMap.get(name).containsKey("genome")) {
+          g = mDescriptionMap.get(name).get("genome");
+        }
 
-			for (String tabName : CollectionUtils.sortCaseInsensitive(sourceTabNames.keySet())) {
-				ModernScrollPane scrollPane = new ModernScrollPane(sourceTabNames.get(tabName));
+        if (g.equals(genome)) {
+          AnnotationPanel panel = new AnnotationPanel(mDescriptionMap.get(name));
 
-				sourceTabsModel.addTab(tabName, new ModernDialogContentPanel(scrollPane));
-			}
-			
-			SegmentTabsPanel topTabs = 
-					new SegmentTabsPanel(sourceTabsModel, 100, 10, true); //TopTabsPanel;
+          mPanels.add(panel);
 
-			topTabs.setBorder(BorderService.getInstance().createLeftBorder(20));
-			
-			// Add to the genome model
-			genomeTabsModel.addTab(genome, topTabs);
-			
-			// Ensure first tab visible
-			sourceTabsModel.changeTab(0);
-		}
+          sourceTabNames.get(tabName).add(panel);
+          sourceTabNames.get(tabName).add(UI.createVGap(20));
+        }
+      }
 
-		//TextTabs genomeTabs = new TextTabsCentered(genomeTabsModel);
+      for (String tabName : CollectionUtils.sortCaseInsensitive(sourceTabNames.keySet())) {
+        ModernScrollPane scrollPane = new ModernScrollPane(sourceTabNames.get(tabName));
 
-		//Ui.setSize(genomeTabs, ModernWidget.MAX_SIZE_24, BorderService.getInstance().createBottomBorder(20));
+        sourceTabsModel.addTab(tabName, new ModernDialogContentPanel(scrollPane));
+      }
 
+      SegmentTabsPanel topTabs = new SegmentTabsPanel(sourceTabsModel, 100, 10, true); // TopTabsPanel;
 
-		//ModernComponent c = new ModernComponent();
-		//c.setHeader(genomeTabs);
-		//c.setBody(new TabsViewPanel(genomeTabsModel));
-		//c.setBorder(ModernWidget.BORDER);
-		
-		//setBody(c);
-		
-		setInternalContent(new SideTabsPanel(genomeTabsModel));
+      topTabs.setBorder(BorderService.getInstance().createLeftBorder(20));
 
+      // Add to the genome model
+      genomeTabsModel.addTab(genome, topTabs);
 
-		genomeTabsModel.changeTab(0);
-	}
+      // Ensure first tab visible
+      sourceTabsModel.changeTab(0);
+    }
 
-	public List<AnnotationPanel> getPanels() {
-		return Collections.unmodifiableList(mPanels);
-	}
+    // TextTabs genomeTabs = new TextTabsCentered(genomeTabsModel);
 
-	public boolean getClosestMode() {
-		return mCheckClosest.isSelected();
-	}
+    // Ui.setSize(genomeTabs, ModernWidget.MAX_SIZE_24,
+    // BorderService.getInstance().createBottomBorder(20));
+
+    // ModernComponent c = new ModernComponent();
+    // c.setHeader(genomeTabs);
+    // c.setBody(new TabsViewPanel(genomeTabsModel));
+    // c.setBorder(ModernWidget.BORDER);
+
+    // setBody(c);
+
+    setInternalContent(new SideTabsPanel(genomeTabsModel));
+
+    genomeTabsModel.changeTab(0);
+  }
+
+  public List<AnnotationPanel> getPanels() {
+    return Collections.unmodifiableList(mPanels);
+  }
+
+  public boolean getClosestMode() {
+    return mCheckClosest.isSelected();
+  }
 }

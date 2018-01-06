@@ -19,7 +19,7 @@ import org.jebtk.modern.ColorTheme;
 import org.jebtk.modern.graphics.icons.ModernApplicationIcon;
 
 public class AnnotationIcon extends ModernApplicationIcon {
-	public AnnotationIcon() {
-		super("A", "n", ColorTheme.RED);
-	}
+  public AnnotationIcon() {
+    super("A", "n", ColorTheme.RED);
+  }
 }
