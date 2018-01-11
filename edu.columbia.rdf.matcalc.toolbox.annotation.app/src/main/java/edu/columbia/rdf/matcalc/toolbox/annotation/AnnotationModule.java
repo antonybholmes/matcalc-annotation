@@ -76,9 +76,11 @@ import edu.columbia.rdf.matcalc.toolbox.annotation.app.AnnotationIcon;
  *
  */
 public class AnnotationModule extends CalcModule {
-  private static final Logger LOG = LoggerFactory.getLogger(AnnotationModule.class);
+  private static final Logger LOG = LoggerFactory
+      .getLogger(AnnotationModule.class);
 
-  private static final Path RES_FOLDER = PathUtils.getPath("res/modules/annotation");
+  private static final Path RES_FOLDER = PathUtils
+      .getPath("res/modules/annotation");
 
   /**
    * The member window.
@@ -119,7 +121,8 @@ public class AnnotationModule extends CalcModule {
   /*
    * (non-Javadoc)
    * 
-   * @see edu.columbia.rdf.apps.matcalc.modules.Module#init(edu.columbia.rdf.apps.
+   * @see
+   * edu.columbia.rdf.apps.matcalc.modules.Module#init(edu.columbia.rdf.apps.
    * matcalc.MainMatCalcWindow)
    */
   @Override
@@ -136,9 +139,11 @@ public class AnnotationModule extends CalcModule {
         UIService.getInstance().loadIcon(AnnotationIcon.class, 32),
         UIService.getInstance().loadIcon(AnnotationIcon.class, 24));
 
-    button.setToolTip(new ModernToolTip("Annotation", "Annotate regions."), mWindow.getRibbon().getToolTipModel());
+    button.setToolTip(new ModernToolTip("Annotation", "Annotate regions."),
+        mWindow.getRibbon().getToolTipModel());
     button.setClickMessage("Annotate");
-    mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation").add(button);
+    mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation")
+        .add(button);
 
     button.addClickListener(new ModernClickListener() {
       @Override
@@ -153,11 +158,14 @@ public class AnnotationModule extends CalcModule {
       }
     });
 
-    button = new RibbonLargeButton(UIService.getInstance().loadIcon("segment_size", 24));
+    button = new RibbonLargeButton(
+        UIService.getInstance().loadIcon("segment_size", 24));
 
-    button.setToolTip(new ModernToolTip("Segment Size", "Segment Size."), mWindow.getRibbon().getToolTipModel());
+    button.setToolTip(new ModernToolTip("Segment Size", "Segment Size."),
+        mWindow.getRibbon().getToolTipModel());
     button.setClickMessage("Segment Size");
-    mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation").add(button);
+    mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation")
+        .add(button);
 
     button.addClickListener(new ModernClickListener() {
       @Override
@@ -242,12 +250,14 @@ public class AnnotationModule extends CalcModule {
     }
 
     if (locationColumn == -1 && chrCol == -1) {
-      ModernMessageDialog.createWarningDialog(mWindow, "The matrix does not appear to contain genomic coordinates.");
+      ModernMessageDialog.createWarningDialog(mWindow,
+          "The matrix does not appear to contain genomic coordinates.");
 
       return;
     }
 
-    AnnotationDialog dialog = new AnnotationDialog(mWindow, mBedFileMap, mDescriptionMap);
+    AnnotationDialog dialog = new AnnotationDialog(mWindow, mBedFileMap,
+        mDescriptionMap);
 
     dialog.setVisible(true);
 
@@ -298,7 +308,8 @@ public class AnnotationModule extends CalcModule {
       }
 
       if (panel.getAddFirstN()) {
-        ret.setColumnName(c++, "first." + panel.getFirstNCount() + "." + panel.getName());
+        ret.setColumnName(c++,
+            "first." + panel.getFirstNCount() + "." + panel.getName());
       }
 
       if (panel.getCondense()) {
@@ -321,7 +332,8 @@ public class AnnotationModule extends CalcModule {
 
       LOG.info("Loading BED {}", mBedFileMap.get(panel.getName()));
 
-      bedMap.put(panel.getName(), Bed.parseTrack(mBedFileMap.get(panel.getName())));
+      bedMap.put(panel.getName(),
+          Bed.parseTrack(mBedFileMap.get(panel.getName())));
     }
 
     // Now for the annotation
@@ -379,8 +391,8 @@ public class AnnotationModule extends CalcModule {
 
           /*
            * if (dialog.getClosestMode()) { gapSearch =
-           * GenomicRegions.getFixedGapSearch(track.getRegions()); } else { gapSearch =
-           * GenomicRegions.getBinarySearch(track.getRegions()); }
+           * GenomicRegions.getFixedGapSearch(track.getRegions()); } else {
+           * gapSearch = GenomicRegions.getBinarySearch(track.getRegions()); }
            */
 
           gapSearch = GenomicRegions.getBinarySearch(track.getRegions());
@@ -426,7 +438,10 @@ public class AnnotationModule extends CalcModule {
         }
 
         if (panel.getAddFirstN()) {
-          ret.set(r, c++, TextUtils.scJoin(CollectionUtils.head(ids, panel.getFirstNCount())));
+          ret.set(r,
+              c++,
+              TextUtils
+                  .scJoin(CollectionUtils.head(ids, panel.getFirstNCount())));
         }
 
         if (panel.getCondense()) {
@@ -502,7 +517,8 @@ public class AnnotationModule extends CalcModule {
     }
 
     if (locationColumn == -1 && chrCol == -1) {
-      ModernMessageDialog.createWarningDialog(mWindow, "The matrix does not appear to contain genomic coordinates.");
+      ModernMessageDialog.createWarningDialog(mWindow,
+          "The matrix does not appear to contain genomic coordinates.");
 
       return;
     }
@@ -543,7 +559,9 @@ public class AnnotationModule extends CalcModule {
         continue;
       }
 
-      ret.set(r, m.getCols(), Mathematics.round((double) region.getLength() / 1000, 2));
+      ret.set(r,
+          m.getCols(),
+          Mathematics.round((double) region.getLength() / 1000, 2));
     }
 
     mWindow.addToHistory("Segment size", ret);

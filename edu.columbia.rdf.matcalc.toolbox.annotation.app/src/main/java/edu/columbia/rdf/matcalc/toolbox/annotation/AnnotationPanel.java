@@ -1,7 +1,6 @@
 package edu.columbia.rdf.matcalc.toolbox.annotation;
 
 import java.awt.Dimension;
-import java.text.ParseException;
 import java.util.Map;
 
 import javax.swing.Box;
@@ -25,13 +24,15 @@ public class AnnotationPanel extends VBox {
 
   private static final long serialVersionUID = 1L;
 
-  private static final Dimension FIRST_COMBO_SIZE = new Dimension(60, ModernWidget.WIDGET_HEIGHT);
+  private static final Dimension FIRST_COMBO_SIZE = new Dimension(60,
+      ModernWidget.WIDGET_HEIGHT);
 
   private ModernCheckBox mCheckEnabled = new ModernCheckBox();
 
   private ModernCheckBox mCheckAll = new ModernCheckBox("All features");
 
-  private ModernCheckBox mCheckAlphabetical = new ModernCheckBox("Alphabetical");
+  private ModernCheckBox mCheckAlphabetical = new ModernCheckBox(
+      "Alphabetical");
 
   private ModernCheckBox mCheckCount = new ModernCheckBox("Count");
 
@@ -59,7 +60,8 @@ public class AnnotationPanel extends VBox {
 
     @Override
     public void stateChanged(ModernStateEvent e) {
-      SettingsService.getInstance().update(mSetting, ((ModernCheckBox) e.getSource()).isSelected());
+      SettingsService.getInstance().update(mSetting,
+          ((ModernCheckBox) e.getSource()).isSelected());
     }
   }
 
@@ -199,7 +201,8 @@ public class AnnotationPanel extends VBox {
     return c;
   }
 
-  private static final boolean getIsSelected(String annotationName, String name) {
+  private static final boolean getIsSelected(String annotationName,
+      String name) {
     Setting setting = SettingsService.getInstance()
         .getSetting(ROOT_SETTING + annotationName + "." + name + ".selected");
 

@@ -27,7 +27,8 @@ import org.jebtk.modern.tabs.TabsModel;
 import org.jebtk.modern.window.ModernWindow;
 import org.jebtk.modern.window.WindowWidgetFocusEvents;
 
-public class AnnotationDialog extends ModernDialogTaskWindow implements ModernClickListener {
+public class AnnotationDialog extends ModernDialogTaskWindow
+    implements ModernClickListener {
   private static final long serialVersionUID = 1L;
 
   private Map<String, Path> mBedFileMap;
@@ -36,7 +37,8 @@ public class AnnotationDialog extends ModernDialogTaskWindow implements ModernCl
 
   private List<AnnotationPanel> mPanels = new ArrayList<AnnotationPanel>();
 
-  private ModernCheckBox mCheckOverlapping = new ModernCheckBox("Overlapping", true);
+  private ModernCheckBox mCheckOverlapping = new ModernCheckBox("Overlapping",
+      true);
 
   private ModernRadioButton mCheckClosest = new ModernRadioButton("Closest");
 
@@ -111,7 +113,8 @@ public class AnnotationDialog extends ModernDialogTaskWindow implements ModernCl
         }
 
         if (g.equals(genome)) {
-          AnnotationPanel panel = new AnnotationPanel(mDescriptionMap.get(name));
+          AnnotationPanel panel = new AnnotationPanel(
+              mDescriptionMap.get(name));
 
           mPanels.add(panel);
 
@@ -120,13 +123,17 @@ public class AnnotationDialog extends ModernDialogTaskWindow implements ModernCl
         }
       }
 
-      for (String tabName : CollectionUtils.sortCaseInsensitive(sourceTabNames.keySet())) {
-        ModernScrollPane scrollPane = new ModernScrollPane(sourceTabNames.get(tabName));
+      for (String tabName : CollectionUtils
+          .sortCaseInsensitive(sourceTabNames.keySet())) {
+        ModernScrollPane scrollPane = new ModernScrollPane(
+            sourceTabNames.get(tabName));
 
-        sourceTabsModel.addTab(tabName, new ModernDialogContentPanel(scrollPane));
+        sourceTabsModel.addTab(tabName,
+            new ModernDialogContentPanel(scrollPane));
       }
 
-      SegmentTabsPanel topTabs = new SegmentTabsPanel(sourceTabsModel, 100, 10, true); // TopTabsPanel;
+      SegmentTabsPanel topTabs = new SegmentTabsPanel(sourceTabsModel, 100, 10,
+          true); // TopTabsPanel;
 
       topTabs.setBorder(BorderService.getInstance().createLeftBorder(20));
 
