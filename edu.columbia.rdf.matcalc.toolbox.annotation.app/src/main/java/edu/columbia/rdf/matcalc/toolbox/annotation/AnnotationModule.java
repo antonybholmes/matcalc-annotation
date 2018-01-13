@@ -139,8 +139,7 @@ public class AnnotationModule extends CalcModule {
         UIService.getInstance().loadIcon(AnnotationIcon.class, 32),
         UIService.getInstance().loadIcon(AnnotationIcon.class, 24));
 
-    button.setToolTip(new ModernToolTip("Annotation", "Annotate regions."),
-        mWindow.getRibbon().getToolTipModel());
+    button.setToolTip(new ModernToolTip("Annotation", "Annotate regions."));
     button.setClickMessage("Annotate");
     mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation")
         .add(button);
@@ -161,8 +160,7 @@ public class AnnotationModule extends CalcModule {
     button = new RibbonLargeButton(
         UIService.getInstance().loadIcon("segment_size", 24));
 
-    button.setToolTip(new ModernToolTip("Segment Size", "Segment Size."),
-        mWindow.getRibbon().getToolTipModel());
+    button.setToolTip(new ModernToolTip("Segment Size", "Segment Size."));
     button.setClickMessage("Segment Size");
     mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation")
         .add(button);
