@@ -59,7 +59,7 @@ import org.jebtk.modern.dialog.ModernMessageDialog;
 import org.jebtk.modern.event.ModernClickEvent;
 import org.jebtk.modern.event.ModernClickListener;
 import org.jebtk.modern.ribbon.RibbonLargeButton;
-import org.jebtk.modern.widget.tooltip.ModernToolTip;
+import org.jebtk.modern.tooltip.ModernToolTip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
