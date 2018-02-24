@@ -12,7 +12,7 @@ import org.jebtk.modern.theme.ThemeService;
 import org.xml.sax.SAXException;
 
 import edu.columbia.rdf.matcalc.MainMatCalc;
-import edu.columbia.rdf.matcalc.ModuleLoader;
+import edu.columbia.rdf.matcalc.BasicModuleLoader;
 import edu.columbia.rdf.matcalc.bio.BioModuleLoader;
 import edu.columbia.rdf.matcalc.toolbox.annotation.AnnotationModule;
 
@@ -28,7 +28,7 @@ public class MainAnnotation {
 
     ThemeService.getInstance().setTheme(ColorTheme.RED);
 
-    ModuleLoader ml = new BioModuleLoader().addModule(AnnotationModule.class);
+    BasicModuleLoader ml = new BioModuleLoader().addModule(AnnotationModule.class);
 
     MainMatCalc.main(new AnnotationInfo(), ml);
   }
