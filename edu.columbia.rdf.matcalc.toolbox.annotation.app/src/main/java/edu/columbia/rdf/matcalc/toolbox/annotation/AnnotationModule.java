@@ -42,6 +42,7 @@ import org.jebtk.bioinformatics.ext.ucsc.UCSCTrack;
 import org.jebtk.bioinformatics.ext.ucsc.UCSCTrackRegion;
 import org.jebtk.bioinformatics.gapsearch.GapSearch;
 import org.jebtk.bioinformatics.genomic.Chromosome;
+import org.jebtk.bioinformatics.genomic.Genome;
 import org.jebtk.bioinformatics.genomic.GenomeService;
 import org.jebtk.bioinformatics.genomic.GenomicRegion;
 import org.jebtk.bioinformatics.genomic.GenomicRegions;
@@ -89,7 +90,8 @@ public class AnnotationModule extends CalcModule {
 
   private Map<String, Path> mBedFileMap = new TreeMap<String, Path>();
 
-  private Map<String, Map<String, String>> mDescriptionMap = new TreeMap<String, Map<String, String>>();
+  private Map<String, Map<String, String>> mDescriptionMap = 
+      new TreeMap<String, Map<String, String>>();
 
   /*
    * (non-Javadoc)
@@ -112,8 +114,6 @@ public class AnnotationModule extends CalcModule {
     try {
       annotate();
     } catch (IOException e) {
-      e.printStackTrace();
-    } catch (ParseException e) {
       e.printStackTrace();
     }
   }
@@ -151,8 +151,6 @@ public class AnnotationModule extends CalcModule {
           annotate();
         } catch (IOException e1) {
           e1.printStackTrace();
-        } catch (ParseException e1) {
-          e1.printStackTrace();
         }
       }
     });
@@ -168,11 +166,7 @@ public class AnnotationModule extends CalcModule {
     button.addClickListener(new ModernClickListener() {
       @Override
       public void clicked(ModernClickEvent e) {
-        try {
-          segmentSize();
-        } catch (ParseException e1) {
-          e1.printStackTrace();
-        }
+        segmentSize();
       }
     });
   }
@@ -211,7 +205,9 @@ public class AnnotationModule extends CalcModule {
    * @throws IOException
    * @throws Exception
    */
-  private void annotate() throws IOException, ParseException {
+  private void annotate() throws IOException {
+    String genome = Genome.HG19;
+    
     DataFrame m = mWindow.getCurrentMatrix();
 
     // first find a location column
@@ -358,9 +354,9 @@ public class AnnotationModule extends CalcModule {
           continue;
         }
 
-        region = GenomicRegion.parse(t);
+        region = GenomicRegion.parse(genome, t);
       } else {
-        chr = GenomeService.getInstance().human(m.getText(r, chrCol));
+        chr = GenomeService.instance().chr(genome, m.getText(r, chrCol));
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 
@@ -450,9 +446,9 @@ public class AnnotationModule extends CalcModule {
             // In locations mode we want to report the minimum and
             // maximum coordinates that we find so reparse the
             // coordinates and get the extreme start and end
-            v1 = Integer.toString(GenomicRegion.parse(v1).getStart());
+            v1 = Integer.toString(GenomicRegion.parse(genome, v1).getStart());
 
-            v2 = Integer.toString(GenomicRegion.parse(v2).getEnd());
+            v2 = Integer.toString(GenomicRegion.parse(genome, v2).getEnd());
           }
 
           // If items at the extremes of the list are the same, there
@@ -478,7 +474,9 @@ public class AnnotationModule extends CalcModule {
    * 
    * @throws ParseException
    */
-  private void segmentSize() throws ParseException {
+  private void segmentSize() {
+    String genome = Genome.HG19;
+    
     DataFrame m = mWindow.getCurrentMatrix();
 
     // first find a location column
@@ -544,9 +542,9 @@ public class AnnotationModule extends CalcModule {
           continue;
         }
 
-        region = GenomicRegion.parse(t);
+        region = GenomicRegion.parse(genome, t);
       } else {
-        chr = GenomeService.getInstance().human(m.getText(r, chrCol));
+        chr = GenomeService.instance().chr(genome, m.getText(r, chrCol));
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 
