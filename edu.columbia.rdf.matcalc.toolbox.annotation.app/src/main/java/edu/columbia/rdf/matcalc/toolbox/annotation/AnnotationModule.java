@@ -211,7 +211,7 @@ public class AnnotationModule extends CalcModule {
     DataFrame m = mWindow.getCurrentMatrix();
 
     // first find a location column
-    int locationColumn = DataFrame.findColumn(m, "location");
+    int locationColumn = DataFrame.findColumn(m, "location", "region");
 
     if (locationColumn != -1) {
 
