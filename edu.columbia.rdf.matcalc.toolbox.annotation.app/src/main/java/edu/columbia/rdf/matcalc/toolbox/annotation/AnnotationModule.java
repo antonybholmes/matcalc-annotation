@@ -53,7 +53,7 @@ import org.jebtk.core.io.FileUtils;
 import org.jebtk.core.io.PathUtils;
 import org.jebtk.core.text.TextUtils;
 import org.jebtk.math.matrix.DataFrame;
-import org.jebtk.modern.UIService;
+import org.jebtk.modern.AssetService;
 import org.jebtk.modern.button.ModernButton;
 import org.jebtk.modern.dialog.ModernDialogStatus;
 import org.jebtk.modern.dialog.ModernMessageDialog;
@@ -136,8 +136,8 @@ public class AnnotationModule extends CalcModule {
     }
 
     ModernButton button = new RibbonLargeButton("Annotation",
-        UIService.getInstance().loadIcon(AnnotationIcon.class, 32),
-        UIService.getInstance().loadIcon(AnnotationIcon.class, 24));
+        AssetService.getInstance().loadIcon(AnnotationIcon.class, 32),
+        AssetService.getInstance().loadIcon(AnnotationIcon.class, 24));
 
     button.setToolTip(new ModernToolTip("Annotation", "Annotate regions."));
     button.setClickMessage("Annotate");
@@ -156,7 +156,7 @@ public class AnnotationModule extends CalcModule {
     });
 
     button = new RibbonLargeButton(
-        UIService.getInstance().loadIcon("segment_size", 24));
+        AssetService.getInstance().loadIcon("segment_size", 24));
 
     button.setToolTip(new ModernToolTip("Segment Size", "Segment Size."));
     button.setClickMessage("Segment Size");
@@ -356,7 +356,7 @@ public class AnnotationModule extends CalcModule {
 
         region = GenomicRegion.parse(genome, t);
       } else {
-        chr = GenomeService.instance().chr(genome, m.getText(r, chrCol));
+        chr = GenomeService.getInstance().chr(genome, m.getText(r, chrCol));
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 
@@ -544,7 +544,7 @@ public class AnnotationModule extends CalcModule {
 
         region = GenomicRegion.parse(genome, t);
       } else {
-        chr = GenomeService.instance().chr(genome, m.getText(r, chrCol));
+        chr = GenomeService.getInstance().chr(genome, m.getText(r, chrCol));
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 

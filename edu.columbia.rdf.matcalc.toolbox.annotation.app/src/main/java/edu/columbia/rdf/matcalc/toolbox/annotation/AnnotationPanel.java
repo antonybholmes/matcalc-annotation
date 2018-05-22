@@ -207,7 +207,7 @@ public class AnnotationPanel extends VBox {
         .getSetting(ROOT_SETTING + annotationName + "." + name + ".selected");
 
     if (setting != null) {
-      return setting.getAsBool();
+      return setting.getBool();
     } else {
       return false;
     }
