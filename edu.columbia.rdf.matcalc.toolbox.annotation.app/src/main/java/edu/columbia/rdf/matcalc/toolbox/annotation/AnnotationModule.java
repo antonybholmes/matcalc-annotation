@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.jebtk.bioinformatics.ext.ucsc.Bed;
-import org.jebtk.bioinformatics.ext.ucsc.BedRegion;
+import org.jebtk.bioinformatics.ext.ucsc.BedElement;
 import org.jebtk.bioinformatics.ext.ucsc.UCSCTrack;
 import org.jebtk.bioinformatics.ext.ucsc.UCSCTrackRegion;
 import org.jebtk.bioinformatics.gapsearch.GapSearch;
@@ -389,7 +389,7 @@ public class AnnotationModule extends CalcModule {
            * gapSearch = GenomicRegions.getBinarySearch(track.getRegions()); }
            */
 
-          gapSearch = GenomicRegions.getBinarySearch(track.getRegions());
+          gapSearch = GenomicRegions.getBinarySearch(track.getElements());
 
           LOG.info("Index built");
           gapMap.put(track, gapSearch);
@@ -409,7 +409,7 @@ public class AnnotationModule extends CalcModule {
               if (panel.getAddLocations()) {
                 ids.add(tr.getLocation());
               } else {
-                ids.add(((BedRegion) tr).getName());
+                ids.add(((BedElement) tr).getName());
               }
             }
           }
@@ -418,7 +418,7 @@ public class AnnotationModule extends CalcModule {
             if (panel.getAddLocations()) {
               ids.add(tr.getLocation());
             } else {
-              ids.add(((BedRegion) tr).getName());
+              ids.add(((BedElement) tr).getName());
             }
           }
         }
