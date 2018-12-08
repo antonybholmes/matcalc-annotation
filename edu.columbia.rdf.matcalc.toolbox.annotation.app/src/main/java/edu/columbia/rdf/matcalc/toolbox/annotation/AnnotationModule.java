@@ -39,11 +39,11 @@ import java.util.TreeMap;
 import org.jebtk.bioinformatics.ext.ucsc.Bed;
 import org.jebtk.bioinformatics.ext.ucsc.BedElement;
 import org.jebtk.bioinformatics.ext.ucsc.UCSCTrack;
-import org.jebtk.bioinformatics.ext.ucsc.UCSCTrackRegion;
 import org.jebtk.bioinformatics.gapsearch.GapSearch;
 import org.jebtk.bioinformatics.genomic.Chromosome;
 import org.jebtk.bioinformatics.genomic.Genome;
 import org.jebtk.bioinformatics.genomic.GenomeService;
+import org.jebtk.bioinformatics.genomic.GenomicElement;
 import org.jebtk.bioinformatics.genomic.GenomicRegion;
 import org.jebtk.bioinformatics.genomic.GenomicRegions;
 import org.jebtk.core.Mathematics;
@@ -206,7 +206,7 @@ public class AnnotationModule extends CalcModule {
    * @throws Exception
    */
   private void annotate() throws IOException {
-    String genome = Genome.HG19;
+    Genome genome = Genome.HG19;
     
     DataFrame m = mWindow.getCurrentMatrix();
 
@@ -327,7 +327,7 @@ public class AnnotationModule extends CalcModule {
       LOG.info("Loading BED {}", mBedFileMap.get(panel.getName()));
 
       bedMap.put(panel.getName(),
-          Bed.parseTrack(mBedFileMap.get(panel.getName())));
+          Bed.parseTrack("bed", mBedFileMap.get(panel.getName())));
     }
 
     // Now for the annotation
@@ -338,10 +338,11 @@ public class AnnotationModule extends CalcModule {
     int start;
     int end;
 
-    Map<UCSCTrack, GapSearch<UCSCTrackRegion>> gapMap = new HashMap<UCSCTrack, GapSearch<UCSCTrackRegion>>();
+    Map<UCSCTrack, GapSearch<GenomicElement>> gapMap = 
+        new HashMap<UCSCTrack, GapSearch<GenomicElement>>();
 
     UCSCTrack track;
-    GapSearch<UCSCTrackRegion> gapSearch;
+    GapSearch<GenomicElement> gapSearch;
 
     for (int r = 0; r < m.getRows(); ++r) {
       GenomicRegion region;
@@ -389,7 +390,7 @@ public class AnnotationModule extends CalcModule {
            * gapSearch = GenomicRegions.getBinarySearch(track.getRegions()); }
            */
 
-          gapSearch = GenomicRegions.getBinarySearch(track.getElements());
+          gapSearch = GenomicRegions.getBinarySearch(track.getElements().toList());
 
           LOG.info("Index built");
           gapMap.put(track, gapSearch);
@@ -397,13 +398,13 @@ public class AnnotationModule extends CalcModule {
 
         gapSearch = gapMap.get(track);
 
-        List<UCSCTrackRegion> regions = gapSearch.getFeatureSet(region);
+        List<GenomicElement> regions = gapSearch.getFeatureSet(region);
 
         List<String> ids = new UniqueArrayList<String>();
 
         if (!dialog.getClosestMode()) {
           // Everything that overlaps
-          for (UCSCTrackRegion tr : regions) {
+          for (GenomicRegion tr : regions) {
             if (GenomicRegion.overlaps(tr, region)) {
 
               if (panel.getAddLocations()) {
@@ -414,7 +415,7 @@ public class AnnotationModule extends CalcModule {
             }
           }
         } else {
-          for (UCSCTrackRegion tr : regions) {
+          for (GenomicRegion tr : regions) {
             if (panel.getAddLocations()) {
               ids.add(tr.getLocation());
             } else {
@@ -475,7 +476,7 @@ public class AnnotationModule extends CalcModule {
    * @throws ParseException
    */
   private void segmentSize() {
-    String genome = Genome.HG19;
+    Genome genome = Genome.HG19;
     
     DataFrame m = mWindow.getCurrentMatrix();
 
