@@ -156,7 +156,7 @@ public class AnnotationDialog extends ModernDialogTaskWindow
 
     // setBody(c);
 
-    setInternalContent(new SideTabsPanel(genomeTabsModel));
+    setBody(new SideTabsPanel(genomeTabsModel));
 
     genomeTabsModel.changeTab(0);
   }

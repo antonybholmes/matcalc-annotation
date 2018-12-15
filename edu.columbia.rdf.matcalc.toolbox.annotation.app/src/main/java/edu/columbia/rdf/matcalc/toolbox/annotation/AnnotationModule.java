@@ -65,7 +65,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.columbia.rdf.matcalc.MainMatCalcWindow;
-import edu.columbia.rdf.matcalc.toolbox.CalcModule;
+import edu.columbia.rdf.matcalc.toolbox.Module;
 import edu.columbia.rdf.matcalc.toolbox.annotation.app.AnnotationIcon;
 
 /**
@@ -76,7 +76,7 @@ import edu.columbia.rdf.matcalc.toolbox.annotation.app.AnnotationIcon;
  * @author Antony Holmes Holmes
  *
  */
-public class AnnotationModule extends CalcModule {
+public class AnnotationModule extends Module {
   private static final Logger LOG = LoggerFactory
       .getLogger(AnnotationModule.class);
 
@@ -467,7 +467,7 @@ public class AnnotationModule extends CalcModule {
       }
     }
 
-    mWindow.addToHistory("Annotated", ret);
+    mWindow.history().addToHistory("Annotated", ret);
   }
 
   /**
@@ -561,6 +561,6 @@ public class AnnotationModule extends CalcModule {
           Mathematics.round((double) region.getLength() / 1000, 2));
     }
 
-    mWindow.addToHistory("Segment size", ret);
+    mWindow.history().addToHistory("Segment size", ret);
   }
 }
