@@ -47,6 +47,8 @@ import org.jebtk.bioinformatics.genomic.GenomicElement;
 import org.jebtk.bioinformatics.genomic.GenomicRegion;
 import org.jebtk.bioinformatics.genomic.GenomicRegions;
 import org.jebtk.core.Mathematics;
+import org.jebtk.core.cli.ArgParser;
+import org.jebtk.core.cli.Args;
 import org.jebtk.core.collections.CollectionUtils;
 import org.jebtk.core.collections.UniqueArrayList;
 import org.jebtk.core.io.FileUtils;
@@ -73,7 +75,7 @@ import edu.columbia.rdf.matcalc.toolbox.annotation.app.AnnotationIcon;
  * with the same merge id will be merged together. Coordinates and copy number
  * will be adjusted but genes, cytobands etc are not.
  *
- * @author Antony Holmes Holmes
+ * @author Antony Holmes
  *
  */
 public class AnnotationModule extends Module {
@@ -83,6 +85,12 @@ public class AnnotationModule extends Module {
   private static final Path RES_FOLDER = PathUtils
       .getPath("res/modules/annotation");
 
+  private static final Args ARGS = new Args();
+
+  static {
+    ARGS.add('s', "switch-tab");
+  }
+  
   /**
    * The member window.
    */
@@ -92,6 +100,8 @@ public class AnnotationModule extends Module {
 
   private Map<String, Map<String, String>> mDescriptionMap = 
       new TreeMap<String, Map<String, String>>();
+
+
 
   /*
    * (non-Javadoc)
@@ -104,11 +114,14 @@ public class AnnotationModule extends Module {
   }
 
   @Override
-  public void run(String... args) {
-    for (String arg : args) {
-      if (arg.equals("--switch-tab")) {
-        mWindow.getRibbon().changeTab("Annotation");
-      }
+  public Args getArgs() {
+    return ARGS;
+  }
+
+  @Override
+  public void run(ArgParser ap) {
+    if (ap.contains("switch-tab")) {
+      mWindow.getRibbon().changeTab("Annotation");
     }
 
     try {
@@ -142,7 +155,7 @@ public class AnnotationModule extends Module {
     button.setToolTip(new ModernToolTip("Annotation", "Annotate regions."));
     button.setClickMessage("Annotate");
     mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation")
-        .add(button);
+    .add(button);
 
     button.addClickListener(new ModernClickListener() {
       @Override
@@ -161,7 +174,7 @@ public class AnnotationModule extends Module {
     button.setToolTip(new ModernToolTip("Segment Size", "Segment Size."));
     button.setClickMessage("Segment Size");
     mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation")
-        .add(button);
+    .add(button);
 
     button.addClickListener(new ModernClickListener() {
       @Override
@@ -207,7 +220,7 @@ public class AnnotationModule extends Module {
    */
   private void annotate() throws IOException {
     Genome genome = Genome.HG19;
-    
+
     DataFrame m = mWindow.getCurrentMatrix();
 
     // first find a location column
@@ -436,7 +449,7 @@ public class AnnotationModule extends Module {
           ret.set(r,
               c++,
               TextUtils
-                  .scJoin(CollectionUtils.head(ids, panel.getFirstNCount())));
+              .scJoin(CollectionUtils.head(ids, panel.getFirstNCount())));
         }
 
         if (panel.getCondense()) {
@@ -477,7 +490,7 @@ public class AnnotationModule extends Module {
    */
   private void segmentSize() {
     Genome genome = Genome.HG19;
-    
+
     DataFrame m = mWindow.getCurrentMatrix();
 
     // first find a location column
