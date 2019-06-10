@@ -17,7 +17,8 @@ import org.jebtk.modern.UI;
 import org.jebtk.modern.button.ModernCheckBox;
 import org.jebtk.modern.button.ModernRadioButton;
 import org.jebtk.modern.dialog.ModernDialogContentPanel;
-import org.jebtk.modern.dialog.ModernDialogTaskWindow;
+import org.jebtk.modern.dialog.ModernDialogMultiCardWindow;
+import org.jebtk.modern.dialog.ModernDialogTaskType;
 import org.jebtk.modern.event.ModernClickListener;
 import org.jebtk.modern.panel.VBox;
 import org.jebtk.modern.scrollpane.ModernScrollPane;
@@ -27,7 +28,7 @@ import org.jebtk.modern.tabs.TabsModel;
 import org.jebtk.modern.window.ModernWindow;
 import org.jebtk.modern.window.WindowWidgetFocusEvents;
 
-public class AnnotationDialog extends ModernDialogTaskWindow
+public class AnnotationDialog extends ModernDialogMultiCardWindow
     implements ModernClickListener {
   private static final long serialVersionUID = 1L;
 
@@ -46,12 +47,10 @@ public class AnnotationDialog extends ModernDialogTaskWindow
 
   public AnnotationDialog(ModernWindow parent, Map<String, Path> bedFileMap,
       Map<String, Map<String, String>> descriptionMap) {
-    super(parent);
+    super(parent, "Annotation", ModernDialogTaskType.OK_CANCEL);
 
     mBedFileMap = bedFileMap;
     mDescriptionMap = descriptionMap;
-
-    setTitle("Annotation");
 
     createUi();
 
@@ -71,7 +70,7 @@ public class AnnotationDialog extends ModernDialogTaskWindow
   }
 
   private final void createUi() {
-    TabsModel genomeTabsModel = new TabsModel();
+    //TabsModel genomeTabsModel = new TabsModel();
 
     Set<String> genomeTabNames = new TreeSet<String>();
 
@@ -128,8 +127,7 @@ public class AnnotationDialog extends ModernDialogTaskWindow
         ModernScrollPane scrollPane = new ModernScrollPane(
             sourceTabNames.get(tabName));
 
-        sourceTabsModel.addTab(tabName,
-            new ModernDialogContentPanel(scrollPane));
+        sourceTabsModel.addTab(tabName, scrollPane);
       }
 
       SegmentTabsPanel topTabs = new SegmentTabsPanel(sourceTabsModel, 100, 10,
@@ -138,7 +136,7 @@ public class AnnotationDialog extends ModernDialogTaskWindow
       topTabs.setBorder(BorderService.getInstance().createLeftBorder(20));
 
       // Add to the genome model
-      genomeTabsModel.addTab(genome, topTabs);
+      addTab(genome, topTabs);
 
       // Ensure first tab visible
       sourceTabsModel.changeTab(0);
@@ -156,9 +154,11 @@ public class AnnotationDialog extends ModernDialogTaskWindow
 
     // setBody(c);
 
-    setBody(new SideTabsPanel(genomeTabsModel));
+    //setBody(new SideTabsPanel(genomeTabsModel));
 
-    genomeTabsModel.changeTab(0);
+    //genomeTabsModel.changeTab(0);
+    
+    getTabsModel().changeTab(0);
   }
 
   public List<AnnotationPanel> getPanels() {

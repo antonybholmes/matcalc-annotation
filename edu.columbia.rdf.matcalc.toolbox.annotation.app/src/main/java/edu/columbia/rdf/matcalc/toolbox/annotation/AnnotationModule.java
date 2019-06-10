@@ -46,6 +46,7 @@ import org.jebtk.bioinformatics.genomic.GenomeService;
 import org.jebtk.bioinformatics.genomic.GenomicElement;
 import org.jebtk.bioinformatics.genomic.GenomicRegion;
 import org.jebtk.bioinformatics.genomic.GenomicRegions;
+import org.jebtk.bioinformatics.genomic.GenomicType;
 import org.jebtk.core.Mathematics;
 import org.jebtk.core.cli.ArgParser;
 import org.jebtk.core.cli.Args;
@@ -53,6 +54,7 @@ import org.jebtk.core.collections.CollectionUtils;
 import org.jebtk.core.collections.UniqueArrayList;
 import org.jebtk.core.io.FileUtils;
 import org.jebtk.core.io.PathUtils;
+import org.jebtk.core.text.Splitter;
 import org.jebtk.core.text.TextUtils;
 import org.jebtk.math.matrix.DataFrame;
 import org.jebtk.modern.AssetService;
@@ -90,7 +92,7 @@ public class AnnotationModule extends Module {
   static {
     ARGS.add('s', "switch-tab");
   }
-  
+
   /**
    * The member window.
    */
@@ -98,10 +100,7 @@ public class AnnotationModule extends Module {
 
   private Map<String, Path> mBedFileMap = new TreeMap<String, Path>();
 
-  private Map<String, Map<String, String>> mDescriptionMap = 
-      new TreeMap<String, Map<String, String>>();
-
-
+  private Map<String, Map<String, String>> mDescriptionMap = new TreeMap<String, Map<String, String>>();
 
   /*
    * (non-Javadoc)
@@ -155,7 +154,7 @@ public class AnnotationModule extends Module {
     button.setToolTip(new ModernToolTip("Annotation", "Annotate regions."));
     button.setClickMessage("Annotate");
     mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation")
-    .add(button);
+        .add(button);
 
     button.addClickListener(new ModernClickListener() {
       @Override
@@ -174,7 +173,7 @@ public class AnnotationModule extends Module {
     button.setToolTip(new ModernToolTip("Segment Size", "Segment Size."));
     button.setClickMessage("Segment Size");
     mWindow.getRibbon().getToolbar("Bioinformatics").getSection("Annotation")
-    .add(button);
+        .add(button);
 
     button.addClickListener(new ModernClickListener() {
       @Override
@@ -340,7 +339,7 @@ public class AnnotationModule extends Module {
       LOG.info("Loading BED {}", mBedFileMap.get(panel.getName()));
 
       bedMap.put(panel.getName(),
-          Bed.parseTrack("bed", mBedFileMap.get(panel.getName())));
+          Bed.parseTrack(GenomicType.REGION, mBedFileMap.get(panel.getName())));
     }
 
     // Now for the annotation
@@ -351,8 +350,7 @@ public class AnnotationModule extends Module {
     int start;
     int end;
 
-    Map<UCSCTrack, GapSearch<GenomicElement>> gapMap = 
-        new HashMap<UCSCTrack, GapSearch<GenomicElement>>();
+    Map<UCSCTrack, GapSearch<GenomicElement>> gapMap = new HashMap<UCSCTrack, GapSearch<GenomicElement>>();
 
     UCSCTrack track;
     GapSearch<GenomicElement> gapSearch;
@@ -374,7 +372,7 @@ public class AnnotationModule extends Module {
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 
-        region = new GenomicRegion(chr, start, end);
+        region = new GenomicRegion(genome, chr, start, end);
       }
 
       if (region == null) {
@@ -403,9 +401,12 @@ public class AnnotationModule extends Module {
            * gapSearch = GenomicRegions.getBinarySearch(track.getRegions()); }
            */
 
-          gapSearch = GenomicRegions.getBinarySearch(track.getElements().toList());
+          // System.err.println(track.getElements().toList().size());
 
-          LOG.info("Index built");
+          gapSearch = GenomicRegions
+              .getBinarySearch(track.getElements().toList());
+
+          LOG.info("Index built: {} elements", gapSearch.size());
           gapMap.put(track, gapSearch);
         }
 
@@ -423,7 +424,7 @@ public class AnnotationModule extends Module {
               if (panel.getAddLocations()) {
                 ids.add(tr.getLocation());
               } else {
-                ids.add(((BedElement) tr).getName());
+                ids.add(getSymbol(((BedElement) tr).getName()));
               }
             }
           }
@@ -432,7 +433,7 @@ public class AnnotationModule extends Module {
             if (panel.getAddLocations()) {
               ids.add(tr.getLocation());
             } else {
-              ids.add(((BedElement) tr).getName());
+              ids.add(getSymbol(((BedElement) tr).getName()));
             }
           }
         }
@@ -449,29 +450,34 @@ public class AnnotationModule extends Module {
           ret.set(r,
               c++,
               TextUtils
-              .scJoin(CollectionUtils.head(ids, panel.getFirstNCount())));
+                  .scJoin(CollectionUtils.head(ids, panel.getFirstNCount())));
         }
 
         if (panel.getCondense()) {
-          String v1 = ids.get(0);
-          String v2 = ids.get(ids.size() - 1);
+          if (ids.size() > 0) {
 
-          if (panel.getAddLocations()) {
-            // In locations mode we want to report the minimum and
-            // maximum coordinates that we find so reparse the
-            // coordinates and get the extreme start and end
-            v1 = Integer.toString(GenomicRegion.parse(genome, v1).getStart());
+            String v1 = ids.get(0);
+            String v2 = ids.get(ids.size() - 1);
 
-            v2 = Integer.toString(GenomicRegion.parse(genome, v2).getEnd());
+            if (panel.getAddLocations()) {
+              // In locations mode we want to report the minimum and
+              // maximum coordinates that we find so reparse the
+              // coordinates and get the extreme start and end
+              v1 = Integer.toString(GenomicRegion.parse(genome, v1).getStart());
+
+              v2 = Integer.toString(GenomicRegion.parse(genome, v2).getEnd());
+            }
+
+            // If items at the extremes of the list are the same, there
+            // is no point adding dashes
+            if (v1.equals(v2)) {
+              ret.set(r, c, v1);
+            } else {
+              ret.set(r, c, v1 + "--" + v2);
+            }
           }
 
-          // If items at the extremes of the list are the same, there
-          // is no point adding dashes
-          if (v1.equals(v2)) {
-            ret.set(r, c++, v1);
-          } else {
-            ret.set(r, c++, v1 + "--" + v2);
-          }
+          ++c;
         }
 
         if (panel.getAddAll()) {
@@ -562,7 +568,7 @@ public class AnnotationModule extends Module {
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 
-        region = new GenomicRegion(chr, start, end);
+        region = new GenomicRegion(genome, chr, start, end);
       }
 
       if (region == null) {
@@ -575,5 +581,19 @@ public class AnnotationModule extends Module {
     }
 
     mWindow.history().addToHistory("Segment size", ret);
+  }
+
+  private static List<String> getIds(String name) {
+    return Splitter.onSC().text(name);
+  }
+
+  /**
+   * Bed name consists of gene symbol;id so get just the symbol.
+   * 
+   * @param name
+   * @return
+   */
+  public static String getSymbol(String name) {
+    return getIds(name).get(0);
   }
 }
