@@ -42,7 +42,7 @@ import org.jebtk.bioinformatics.ext.ucsc.UCSCTrack;
 import org.jebtk.bioinformatics.gapsearch.GapSearch;
 import org.jebtk.bioinformatics.genomic.Chromosome;
 import org.jebtk.bioinformatics.genomic.Genome;
-import org.jebtk.bioinformatics.genomic.GenomeService;
+import org.jebtk.bioinformatics.genomic.ChromosomeService;
 import org.jebtk.bioinformatics.genomic.GenomicElement;
 import org.jebtk.bioinformatics.genomic.GenomicRegion;
 import org.jebtk.bioinformatics.genomic.GenomicRegions;
@@ -368,7 +368,7 @@ public class AnnotationModule extends Module {
 
         region = GenomicRegion.parse(genome, t);
       } else {
-        chr = GenomeService.getInstance().chr(genome, m.getText(r, chrCol));
+        chr = ChromosomeService.getInstance().chr(genome, m.getText(r, chrCol));
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 
@@ -564,7 +564,7 @@ public class AnnotationModule extends Module {
 
         region = GenomicRegion.parse(genome, t);
       } else {
-        chr = GenomeService.getInstance().chr(genome, m.getText(r, chrCol));
+        chr = ChromosomeService.getInstance().chr(genome, m.getText(r, chrCol));
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 
