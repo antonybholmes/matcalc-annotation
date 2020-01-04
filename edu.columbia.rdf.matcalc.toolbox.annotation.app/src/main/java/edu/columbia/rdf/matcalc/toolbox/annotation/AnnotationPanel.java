@@ -8,6 +8,7 @@ import javax.swing.Box;
 import org.jebtk.core.settings.Setting;
 import org.jebtk.core.settings.SettingsService;
 import org.jebtk.core.text.TextUtils;
+import org.jebtk.modern.ModernWidget;
 import org.jebtk.modern.UI;
 import org.jebtk.modern.button.ModernCheckBox;
 import org.jebtk.modern.combobox.ModernComboBox;
@@ -18,7 +19,6 @@ import org.jebtk.modern.event.ModernStateListener;
 import org.jebtk.modern.panel.HBox;
 import org.jebtk.modern.panel.VBox;
 import org.jebtk.modern.text.ModernAutoSizeLabel;
-import org.jebtk.modern.widget.ModernWidget;
 
 public class AnnotationPanel extends VBox {
 
