@@ -412,7 +412,7 @@ public class AnnotationModule extends Module {
 
         gapSearch = gapMap.get(track);
 
-        List<GenomicElement> regions = gapSearch.getValues(region);
+        List<GenomicElement> regions = gapSearch.getFeatureSet(region);
 
         List<String> ids = new UniqueArrayList<String>();
 
