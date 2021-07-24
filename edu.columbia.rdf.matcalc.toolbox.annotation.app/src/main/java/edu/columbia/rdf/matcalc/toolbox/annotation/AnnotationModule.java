@@ -372,7 +372,7 @@ public class AnnotationModule extends Module {
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 
-        region = new GenomicRegion(genome, chr, start, end);
+        region = new GenomicRegion(chr, start, end);
       }
 
       if (region == null) {
@@ -404,7 +404,7 @@ public class AnnotationModule extends Module {
           // System.err.println(track.getElements().toList().size());
 
           gapSearch = GenomicRegions
-              .getBinarySearch(track.getElements().toList());
+              .getBinarySearch(track.getElements());
 
           LOG.info("Index built: {} elements", gapSearch.size());
           gapMap.put(track, gapSearch);
@@ -412,7 +412,7 @@ public class AnnotationModule extends Module {
 
         gapSearch = gapMap.get(track);
 
-        List<GenomicElement> regions = gapSearch.getFeatureSet(region);
+        List<GenomicElement> regions = gapSearch.getValues(region);
 
         List<String> ids = new UniqueArrayList<String>();
 
@@ -568,7 +568,7 @@ public class AnnotationModule extends Module {
         start = (int) m.getValue(r, startCol);
         end = (int) m.getValue(r, endCol);
 
-        region = new GenomicRegion(genome, chr, start, end);
+        region = new GenomicRegion(chr, start, end);
       }
 
       if (region == null) {
